@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bus Times</title>
+  <link href="/css/tailwind.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+
+  <div class="container mx-auto p-4">
+    <h1 class="text-3xl font-bold mb-4">Bus Times</h1>
+    <div class="bg-white p-6 rounded shadow-md">
+      <form id="busTimesForm">
+        <div class="mb-4">
+          <label for="location" class="block text-gray-700">Location</label>
+          <input type="text" id="location" name="location" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Enter your location">
+        </div>
+        <div class="mb-4">
+          <button type="submit" class="w-full bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">Get Bus Times</button>
+        </div>
+      </form>
+    </div>
+    <div id="busTimesResults" class="mt-6"></div>
+  </div>
+
+  <a href="/directions">
+    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+      Directions
+    </button>
+  </a>
+
+  <a href="/auth/logout">
+    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+      Logout
+    </button>
+  </a>
+
+  <script src="https://maps.googleapis.com/maps/api/js?key=<%= apiKey %>&libraries=places"></script>
+  <script src="/busTimes.js"></script>
+</body>
+</html>

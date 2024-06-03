@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Directions</title>
+  <link href="/css/tailwind.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+
+  <div class="container mx-auto p-4">
+    <h1 class="text-3xl font-bold mb-4">Get Directions</h1>
+    <div class="bg-white p-6 rounded shadow-md">
+      <form id="directionsForm">
+        <div class="mb-4">
+          <label for="start" class="block text-gray-700">Start Location</label>
+          <input type="text" id="start" name="start" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        </div>
+        <div class="mb-4">
+          <label for="end" class="block text-gray-700">End Location</label>
+          <input type="text" id="end" name="end" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        </div>
+        <div class="mb-4">
+          <button type="submit" class="w-full bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">Get Directions</button>
+        </div>
+      </form>
+    </div>
+    <div class="bg-white p-6 rounded shadow-md mt-6">
+      <form id="searchForm">
+        <div class="mb-4">
+          <label for="search" class="block text-gray-700">Search Locations</label>
+          <input type="text" id="search" name="search" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        </div>
+        <div class="mb-4">
+          <button type="submit" class="w-full bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">Search</button>
+        </div>
+      </form>
+    </div>
+    <div id="map" class="mt-6 h-96 w-full"></div>
+    <div id="directionsResults" class="mt-6"></div>
+    <div id="searchResults" class="mt-6"></div>
+  </div>
+
+  <script src="https://maps.googleapis.com/maps/api/js?key=<%= apiKey %>&libraries=places"></script>
+  <script src="/directions.js"></script>
+</body>
+</html>

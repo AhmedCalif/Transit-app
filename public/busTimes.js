@@ -26,8 +26,12 @@ document.getElementById('busTimesForm').addEventListener('submit', async (event)
             body: JSON.stringify({ location: latLng })
           });
   
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+  
           const busTimes = await response.json();
-          console.log('Bus times response:', busTimes);  // Log the response to inspect its structure
+          console.log('Fetched bus times:', busTimes);
           displayBusTimes(busTimes);
         } catch (error) {
           console.error('Error fetching bus times:', error);
@@ -40,54 +44,51 @@ document.getElementById('busTimesForm').addEventListener('submit', async (event)
   
   function displayBusTimes(busTimes) {
     const busTimesResults = document.getElementById('busTimesResults');
-    busTimesResults.innerHTML = '';  // Clear previous results
+    busTimesResults.innerHTML = ''; // Clear previous results
   
-    busTimes.forEach(times => {
-      times.routes.forEach(route => {
-        route.legs[0].steps.forEach(step => {
-          if (step.travel_mode === 'TRANSIT') {
-            const transitDetails = step.transit_details;
-            
-            const busTimeDiv = document.createElement('div');
-            busTimeDiv.className = 'mb-4 p-4 border rounded shadow';
+    if (!busTimes.length) {
+      busTimesResults.innerHTML = '<p>No bus routes found for the given location.</p>';
+      return;
+    }
   
-            const busRoute = document.createElement('h3');
-            busRoute.className = 'text-lg font-bold';
-            busRoute.textContent = `Bus Route: ${transitDetails.line.short_name}`;
-            busTimeDiv.appendChild(busRoute);
+    busTimes.forEach(route => {
+      if (route && route.legs && route.legs.length > 0) {
+        route.legs.forEach(leg => {
+          leg.steps.forEach(step => {
+            if (step.travel_mode === 'TRANSIT') {
+              const transitDetails = step.transit_details;
   
-            const departure = document.createElement('p');
-            const departureStrong = document.createElement('strong');
-            departureStrong.textContent = 'Departure: ';
-            departure.appendChild(departureStrong);
-            departure.appendChild(document.createTextNode(`${transitDetails.departure_stop.name} at ${transitDetails.departure_time.text}`));
-            busTimeDiv.appendChild(departure);
+              const busTimeInfo = document.createElement('div');
+              busTimeInfo.className = 'mb-4 p-4 border rounded shadow';
   
-            const arrival = document.createElement('p');
-            const arrivalStrong = document.createElement('strong');
-            arrivalStrong.textContent = 'Arrival: ';
-            arrival.appendChild(arrivalStrong);
-            arrival.appendChild(document.createTextNode(`${transitDetails.arrival_stop.name} at ${transitDetails.arrival_time.text}`));
-            busTimeDiv.appendChild(arrival);
+              const busRoute = document.createElement('h3');
+              busRoute.className = 'text-lg font-bold';
+              busRoute.textContent = `Bus Route: ${transitDetails.line.short_name || transitDetails.line.name || 'N/A'}`;
+              busTimeInfo.appendChild(busRoute);
   
-            const headsign = document.createElement('p');
-            const headsignStrong = document.createElement('strong');
-            headsignStrong.textContent = 'Headsign: ';
-            headsign.appendChild(headsignStrong);
-            headsign.appendChild(document.createTextNode(transitDetails.headsign));
-            busTimeDiv.appendChild(headsign);
+              const departure = document.createElement('p');
+              departure.innerHTML = `<strong>Departure:</strong> ${transitDetails.departure_stop.name} at ${transitDetails.departure_time.text}`;
+              busTimeInfo.appendChild(departure);
   
-            const numStops = document.createElement('p');
-            const numStopsStrong = document.createElement('strong');
-            numStopsStrong.textContent = 'Num Stops: ';
-            numStops.appendChild(numStopsStrong);
-            numStops.appendChild(document.createTextNode(transitDetails.num_stops));
-            busTimeDiv.appendChild(numStops);
+              const arrival = document.createElement('p');
+              arrival.innerHTML = `<strong>Arrival:</strong> ${transitDetails.arrival_stop.name} at ${transitDetails.arrival_time.text}`;
+              busTimeInfo.appendChild(arrival);
   
-            busTimesResults.appendChild(busTimeDiv);
-          }
+              const headsign = document.createElement('p');
+              headsign.innerHTML = `<strong>Headsign:</strong> ${transitDetails.headsign}`;
+              busTimeInfo.appendChild(headsign);
+  
+              const numStops = document.createElement('p');
+              numStops.innerHTML = `<strong>Num Stops:</strong> ${transitDetails.num_stops}`;
+              busTimeInfo.appendChild(numStops);
+  
+              busTimesResults.appendChild(busTimeInfo);
+            }
+          });
         });
-      });
+      } else {
+        console.error('No valid legs or steps in the route:', route);
+      }
     });
   }
   
